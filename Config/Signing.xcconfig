@@ -1,0 +1,12 @@
+// Signing team and identifiers, used by both targets, their entitlements and
+// Info.plists.
+//
+// To build with your own Apple account, don't edit this file: copy
+// Local.xcconfig.example to Local.xcconfig (ignored by git) and set your own
+// values there. See README › Build it yourself.
+
+DEVELOPMENT_TEAM = 2GY674R434
+APP_BUNDLE_ID = ch.thbo.analyticsforumami
+APP_GROUP_ID = group.$(APP_BUNDLE_ID)
+
+#include? "Local.xcconfig"

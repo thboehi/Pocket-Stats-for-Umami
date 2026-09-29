@@ -1,0 +1,9 @@
+// Copy this file to Config/Local.xcconfig (ignored by git) to build the app
+// with your own Apple account. Its values override Signing.xcconfig.
+
+// Your Team ID: Xcode › Settings › Accounts, or developer.apple.com › Membership.
+DEVELOPMENT_TEAM = ABCDE12345
+
+// Any reverse-DNS identifier you own. The widget uses "<this>.widget" and the
+// App Group "group.<this>"; Xcode registers them on the first build.
+APP_BUNDLE_ID = com.example.pocketstats

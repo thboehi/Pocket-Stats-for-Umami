@@ -1,0 +1,37 @@
+# Local signing overrides (see Config/Local.xcconfig.example)
+Config/Local.xcconfig
+
+# Private: App Store kit, website material, recordings
+AppStore/
+Site web/
+*.mp4
+*.MP4
+*.mov
+*.MOV
+
+# Xcode
+DerivedData/
+build/
+*.xcuserstate
+xcuserdata/
+*.xcscmblueprint
+*.xccheckout
+*.ipa
+*.dSYM
+*.dSYM.zip
+*.xcarchive
+
+# Secrets that must never be committed
+*.p8
+*.p12
+*.cer
+*.mobileprovision
+*.provisionprofile
+.env
+.env.*
+
+# macOS
+.DS_Store
+
+# Claude Code
+.claude/
