@@ -29,13 +29,9 @@
 
 ---
 
-## Built with AI, and proud of it
+## Built with AI
 
-I'm a web developer, not an iOS developer. I had never shipped a native app before this one.
-
-Pocket Stats for Umami was coded with **[Claude Opus 5.5](https://www.anthropic.com/claude)**, Anthropic's AI model, through Claude Code. I decided what the app should do and how it should look, tested it on my own iPhone and iPad, and reported what was wrong. Claude wrote the Swift code.
-
-I'm not hiding it, because it's the point: an idea no longer has to wait for someone to learn a whole new platform. The whole source is here, so you can judge the result for yourself.
+I'm a web developer, not an iOS developer. This app was coded with the help of **[Claude Opus 5.5](https://www.anthropic.com/claude)**, Anthropic's AI model. I decided what the app should do and how it should look, and tested it on my own devices; Claude wrote most of the Swift code.
 
 ## Features
 
