@@ -7,21 +7,34 @@ struct WebsiteSnapshot: Hashable, Sendable, Identifiable {
     let name: String
     let domain: String?
     let period: WidgetPeriod
+    /// The figure put forward, chosen when configuring the widget.
+    var metric: WidgetMetric
     let stats: WebsiteStats
     let activeVisitors: Int?
-    /// Visitors per bucket, with empty buckets filled in.
-    let visitors: [TimeSeriesPoint]
-    /// Average visitors per bucket over the previous period: the dashed line.
-    let baseline: Double?
+    /// The charted series, with empty buckets filled in. It follows `metric`,
+    /// except for the metrics Umami has no series for (see `chartedMetric`).
+    var series: [TimeSeriesPoint]
+    /// Average per bucket over the previous period: the dashed line. `nil` when
+    /// the comparison is off or there is nothing to compare with.
+    var baseline: Double?
     /// X range of the chart. Today spans the whole day, so the line stops at
     /// the current hour, like an intraday stock chart.
     let chartDomain: ClosedRange<Date>
-    var topPages: [MetricItem] = []
+    /// The configured list at the bottom of the large widget, if any.
+    var breakdownType: MetricType? = nil
+    var breakdown: [MetricItem] = []
+    /// `false` hides the change badge and the dashed line, and spares a request.
+    var comparing = true
 
     var id: String { "\(accountID.uuidString)|\(websiteID)" }
 
+    /// The headline figure, and the string the widgets print for it.
+    var value: Double { metric.value(stats.current) }
+    var headline: String { metric.format(value) }
+
     var change: Double? {
-        Format.change(stats.current.visitors, from: stats.previous?.visitors)
+        guard comparing, let previous = stats.previous else { return nil }
+        return Format.change(value, from: metric.value(previous))
     }
 
     var deepLink: DeepLink {
@@ -30,39 +43,57 @@ struct WebsiteSnapshot: Hashable, Sendable, Identifiable {
 
     // MARK: Loading
 
+    /// A widget refresh runs on a time budget, so a snapshot asks for the least
+    /// it can: the stats call, which already carries the previous period, plus
+    /// the curve when something draws one, plus whatever the family adds.
     static func load(account: Account, website: Website, period: WidgetPeriod,
-                     includeActive: Bool = true, includeTopPages: Bool = false) async throws -> WebsiteSnapshot {
+                     metric: WidgetMetric = .visitors, comparing: Bool = true,
+                     breakdown: MetricType? = nil, includeActive: Bool = true,
+                     includeSeries: Bool = true) async throws -> WebsiteSnapshot {
         let service = AnalyticsServiceFactory.make(for: account)
         let interval = period.preset.interval()
-        let previousInterval = DateInterval(start: interval.start.addingTimeInterval(-interval.duration), duration: interval.duration)
         let unit = period.unit
         let websiteID = website.id
 
         async let stats = service.stats(websiteID: websiteID, interval: interval)
-        async let traffic = service.traffic(websiteID: websiteID, interval: interval, unit: unit)
-        async let previousTraffic = service.traffic(websiteID: websiteID, interval: previousInterval, unit: unit)
+        async let traffic: TrafficSeries? = includeSeries
+            ? try? service.traffic(websiteID: websiteID, interval: interval, unit: unit)
+            : nil
         async let active: Int? = includeActive ? try? service.activeVisitors(websiteID: websiteID) : nil
-        async let pages: [MetricItem] = includeTopPages
-            ? (try? service.metrics(websiteID: websiteID, type: .path, interval: interval, limit: 4)) ?? []
-            : []
+        async let items = breakdownItems(service: service, websiteID: websiteID, type: breakdown, interval: interval)
 
-        let series = ((try? await traffic) ?? .empty).filled(in: interval, unit: unit).visitors
-        let previous = (try? await previousTraffic)?.filled(in: previousInterval, unit: unit).visitors ?? []
-        let baseline = previous.isEmpty ? nil : previous.map(\.value).reduce(0, +) / Double(previous.count)
+        let series = includeSeries ? metric.series(((await traffic) ?? .empty).filled(in: interval, unit: unit)) : []
+        // The dashed line is the previous period's average per bucket. The
+        // stats call already returns that period's totals, so dividing them by
+        // the number of buckets spares a second traffic request per website.
+        let loaded = try await stats
+        let previousTotal = loaded.previous.map { metric.chartTotal($0) }
+        let baseline = comparing && !series.isEmpty
+            ? previousTotal.map { $0 / Double(series.count) }
+            : nil
 
-        return try await WebsiteSnapshot(
+        return await WebsiteSnapshot(
             accountID: account.id,
             websiteID: websiteID,
             name: website.name,
             domain: website.domain,
             period: period,
-            stats: stats,
+            metric: metric,
+            stats: loaded,
             activeVisitors: active,
-            visitors: series,
+            series: series,
             baseline: baseline,
             chartDomain: chartDomain(for: period, interval: interval),
-            topPages: pages
+            breakdownType: breakdown,
+            breakdown: items,
+            comparing: comparing
         )
+    }
+
+    private static func breakdownItems(service: any AnalyticsService, websiteID: String,
+                                       type: MetricType?, interval: DateInterval) async -> [MetricItem] {
+        guard let type else { return [] }
+        return (try? await service.metrics(websiteID: websiteID, type: type, interval: interval, limit: 5)) ?? []
     }
 
     static func chartDomain(for period: WidgetPeriod, interval: DateInterval, calendar: Calendar = .current) -> ClosedRange<Date> {
@@ -77,11 +108,13 @@ struct WebsiteSnapshot: Hashable, Sendable, Identifiable {
 
     static func sample(name: String = "Alpine Trails Blog", domain: String = "alpinetrails.example",
                        visitors: Double = 1_132, previous: Double = 1_021, active: Int = 14,
+                       metric: WidgetMetric = .visitors, breakdownType: MetricType? = .path,
                        shape: [Double] = [3, 2, 1, 1, 2, 5, 12, 26, 38, 44, 52, 61, 58, 66, 71, 64, 55]) -> WebsiteSnapshot {
         let calendar = Calendar.current
         let start = calendar.startOfDay(for: .now)
+        let scale = sampleScale(metric)
         let series = shape.enumerated().map { index, value in
-            TimeSeriesPoint(date: calendar.date(byAdding: .hour, value: index, to: start)!, value: value)
+            TimeSeriesPoint(date: calendar.date(byAdding: .hour, value: index, to: start)!, value: value * scale)
         }
         return WebsiteSnapshot(
             accountID: UUID(),
@@ -89,21 +122,51 @@ struct WebsiteSnapshot: Hashable, Sendable, Identifiable {
             name: name,
             domain: domain,
             period: .today,
+            metric: metric,
             stats: WebsiteStats(
                 current: .init(pageviews: visitors * 2.5, visitors: visitors, visits: visitors * 1.24, bounces: visitors * 0.5, totaltime: visitors * 124),
                 previous: .init(pageviews: previous * 2.4, visitors: previous, visits: previous * 1.27, bounces: previous * 0.53, totaltime: previous * 127)
             ),
             activeVisitors: active,
-            visitors: series,
-            baseline: shape.reduce(0, +) / Double(shape.count) * previous / max(visitors, 1),
+            series: series,
+            baseline: shape.reduce(0, +) / Double(shape.count) * scale * previous / max(visitors, 1),
             chartDomain: start...calendar.date(byAdding: .hour, value: 23, to: start)!,
-            topPages: [
-                MetricItem(value: "/", count: visitors * 0.9),
-                MetricItem(value: "/trails/lac-bleu", count: visitors * 0.42),
-                MetricItem(value: "/blog/winter-gear", count: visitors * 0.31),
-                MetricItem(value: "/about", count: visitors * 0.12),
-            ]
+            breakdownType: breakdownType,
+            breakdown: Self.sampleBreakdown(breakdownType, visitors: visitors)
         )
+    }
+
+    private static func sampleBreakdown(_ type: MetricType?, visitors: Double) -> [MetricItem] {
+        guard let type else { return [] }
+        let values: [String] = switch type {
+        case .path: ["/", "/trails/lac-bleu", "/blog/winter-gear", "/about"]
+        case .referrer: ["google.com", "news.ycombinator.com", "", "mastodon.social"]
+        case .country: ["CH", "FR", "DE", "US"]
+        case .browser: ["safari", "chrome", "firefox", "edge"]
+        case .device: ["mobile", "desktop", "tablet", "laptop"]
+        case .os: ["iOS", "macOS", "Windows", "Android"]
+        case .event: ["signup", "download", "contact", "share"]
+        default: []
+        }
+        let weights: [Double] = [0.9, 0.42, 0.31, 0.12]
+        return zip(values, weights).map { value, weight in
+            MetricItem(value: value, count: (visitors * weight).rounded())
+        }
+    }
+
+    /// The same sample shown with another metric: the widget gallery previews a
+    /// configuration before any real data exists.
+    func previewed(as metric: WidgetMetric) -> WebsiteSnapshot {
+        let ratio = Self.sampleScale(metric) / Self.sampleScale(self.metric)
+        var copy = self
+        copy.metric = metric
+        copy.series = series.map { TimeSeriesPoint(date: $0.date, value: $0.value * ratio) }
+        copy.baseline = baseline.map { $0 * ratio }
+        return copy
+    }
+
+    private static func sampleScale(_ metric: WidgetMetric) -> Double {
+        metric.chartedMetric == .pageviews ? 2.5 : 1
     }
 
     static let samples: [WebsiteSnapshot] = [

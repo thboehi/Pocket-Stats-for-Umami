@@ -10,6 +10,25 @@
     "%@" : {
       "shouldTranslate" : false
     },
+    "%@ %@ · %@" : {
+      "shouldTranslate" : false
+    },
+    "%@ %@ · %lld online" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ %@ · %lld online"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ %@ · %lld en ligne"
+          }
+        }
+      }
+    },
     "%@ compared to the previous period" : {
       "localizations" : {
         "de" : {
@@ -22,6 +41,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ par rapport à la période précédente"
+          }
+        }
+      }
+    },
+    "%@ of %@, %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ von %@, %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ de %@, %@"
           }
         }
       }
@@ -57,6 +92,9 @@
           }
         }
       }
+    },
+    "%@ · %@" : {
+      "shouldTranslate" : false
     },
     "%@, %@: %@ visitors (%@)." : {
       "localizations" : {
@@ -109,92 +147,11 @@
         }
       }
     },
-    "^[%lld view](inflect: true)" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "^[%lld Aufruf](inflect: true)"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "^[%lld vue](inflect: true)"
-          }
-        }
-      }
-    },
-    "^[%lld visitor](inflect: true)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "^[%lld Besucher](inflect: true)"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "^[%lld visiteur](inflect: true)"
-          }
-        }
-      }
-    },
-    "^[%lld visitor](inflect: true) online" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "^[%lld Besucher](inflect: true) online"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "^[%lld visiteur](inflect: true) en ligne"
-          }
-        }
-      }
-    },
-    "^[%lld website](inflect: true)" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "^[%lld Website](inflect: true)"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "^[%lld site](inflect: true)"
-          }
-        }
-      }
-    },
-    "=" : {
+    "0000" : {
       "shouldTranslate" : false
     },
-    "0000" : {
-
-    },
-    "7d" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "7 T."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "7 j"
-          }
-        }
-      }
+    "2" : {
+      "shouldTranslate" : false
     },
     "24h" : {
       "localizations" : {
@@ -212,6 +169,9 @@
         }
       }
     },
+    "3" : {
+      "shouldTranslate" : false
+    },
     "30d" : {
       "localizations" : {
         "de" : {
@@ -224,6 +184,56 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "30 j"
+          }
+        }
+      }
+    },
+    "4" : {
+      "shouldTranslate" : false
+    },
+    "5" : {
+      "shouldTranslate" : false
+    },
+    "6" : {
+      "shouldTranslate" : false
+    },
+    "7" : {
+      "shouldTranslate" : false
+    },
+    "7d" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "7 T."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "7 j"
+          }
+        }
+      }
+    },
+    "8" : {
+      "shouldTranslate" : false
+    },
+    "=" : {
+      "shouldTranslate" : false
+    },
+    "API key" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "API-Schlüssel"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clé API"
           }
         }
       }
@@ -372,6 +382,22 @@
         }
       }
     },
+    "Adds up several websites into one figure." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fasst mehrere Websites zu einer Zahl zusammen."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Additionne plusieurs sites en un seul chiffre."
+          }
+        }
+      }
+    },
     "All (admin)" : {
       "localizations" : {
         "de" : {
@@ -404,6 +430,22 @@
         }
       }
     },
+    "All websites" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Websites"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tous les sites"
+          }
+        }
+      }
+    },
     "Anyone with this link can see the statistics of this website." : {
       "localizations" : {
         "de" : {
@@ -420,22 +462,6 @@
         }
       }
     },
-    "API key" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "API-Schlüssel"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Clé API"
-          }
-        }
-      }
-    },
     "Apply" : {
       "localizations" : {
         "de" : {
@@ -448,6 +474,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Appliquer"
+          }
+        }
+      }
+    },
+    "As configured" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wie konfiguriert"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ordre choisi"
+          }
+        }
+      }
+    },
+    "Automatic" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatisch"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatique"
+          }
+        }
+      }
+    },
+    "Biggest change" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Größte Veränderung"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plus forte variation"
           }
         }
       }
@@ -548,6 +622,22 @@
         }
       }
     },
+    "Check again" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erneut versuchen"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réessayer"
+          }
+        }
+      }
+    },
     "Checking live visitors…" : {
       "localizations" : {
         "de" : {
@@ -560,6 +650,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Recherche des visiteurs en direct…"
+          }
+        }
+      }
+    },
+    "Choose a ranking." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wähle ein Ranking."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choisissez un classement."
           }
         }
       }
@@ -624,6 +730,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fermer les comptes"
+          }
+        }
+      }
+    },
+    "Compare with previous period" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mit vorheriger Periode vergleichen"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comparer à la période précédente"
           }
         }
       }
@@ -720,6 +842,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Copier le code de suivi"
+          }
+        }
+      }
+    },
+    "Could not reach the server." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Server nicht erreichbar."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Serveur injoignable."
           }
         }
       }
@@ -884,22 +1022,6 @@
         }
       }
     },
-    "Delete “%@”?" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "„%@“ löschen?"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Supprimer « %@ » ?"
-          }
-        }
-      }
-    },
     "Delete website" : {
       "localizations" : {
         "de" : {
@@ -912,6 +1034,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Supprimer le site"
+          }
+        }
+      }
+    },
+    "Delete “%@”?" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "„%@“ löschen?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer « %@ » ?"
           }
         }
       }
@@ -960,6 +1098,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Rapports détaillés"
+          }
+        }
+      }
+    },
+    "Details" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Details"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Détails"
           }
         }
       }
@@ -1040,6 +1194,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "OK"
+          }
+        }
+      }
+    },
+    "Duration" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dauer"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durée"
           }
         }
       }
@@ -1156,8 +1326,21 @@
         }
       }
     },
-    "example.com" : {
-      "shouldTranslate" : false
+    "Every website of an account added up into one figure." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Websites eines Kontos in einer Zahl."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tous les sites d’un compte réunis en un seul chiffre."
+          }
+        }
+      }
     },
     "Exit" : {
       "localizations" : {
@@ -1212,7 +1395,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Verfolgen Sie eine einzelne Website ohne Konto, nur lesend. Öffnen Sie in Umami die Einstellungen der Website und aktivieren Sie die Freigabe-URL."
+            "value" : "Verfolge eine einzelne Website ohne Konto, nur lesend. Öffne in Umami die Einstellungen der Website und aktiviere die Freigabe-URL."
           }
         },
         "fr" : {
@@ -1251,6 +1434,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aide et assistance"
+          }
+        }
+      }
+    },
+    "Highest first" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Höchste zuerst"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plus élevé d’abord"
           }
         }
       }
@@ -1351,18 +1550,18 @@
         }
       }
     },
-    "Last 7 days" : {
+    "Last %@" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Letzte 7 Tage"
+            "value" : "Letzte %@"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "7 derniers jours"
+            "value" : "Sur %@"
           }
         }
       }
@@ -1415,6 +1614,22 @@
         }
       }
     },
+    "Last 7 days" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Letzte 7 Tage"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "7 derniers jours"
+          }
+        }
+      }
+    },
     "Last 90 days" : {
       "localizations" : {
         "de" : {
@@ -1427,6 +1642,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "90 derniers jours"
+          }
+        }
+      }
+    },
+    "Live" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Live"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Live"
           }
         }
       }
@@ -1491,6 +1722,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Moi"
+          }
+        }
+      }
+    },
+    "Metric" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kennzahl"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mesure"
           }
         }
       }
@@ -1575,22 +1822,6 @@
         }
       }
     },
-    "No data for this period" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keine Daten für diesen Zeitraum"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucune donnée pour cette période"
-          }
-        }
-      }
-    },
     "No Umami server was found at this address." : {
       "localizations" : {
         "de" : {
@@ -1603,6 +1834,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aucun serveur Umami n’a été trouvé à cette adresse."
+          }
+        }
+      }
+    },
+    "No data for this period" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Daten für diesen Zeitraum"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune donnée pour cette période"
           }
         }
       }
@@ -1639,6 +1886,22 @@
         }
       }
     },
+    "None" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun"
+          }
+        }
+      }
+    },
     "Not affiliated with Umami Software, Inc." : {
       "localizations" : {
         "de" : {
@@ -1671,6 +1934,22 @@
         }
       }
     },
+    "Nothing in this period." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nichts in diesem Zeitraum."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rien sur cette période."
+          }
+        }
+      }
+    },
     "OK" : {
       "localizations" : {
         "de" : {
@@ -1683,6 +1962,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "OK"
+          }
+        }
+      }
+    },
+    "OS" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "BS"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OS"
+          }
+        }
+      }
+    },
+    "One website: the metric of your choice and its trend." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eine Website: die Kennzahl deiner Wahl und ihr Trend."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un site : la mesure de votre choix et sa tendance."
+          }
+        }
+      }
+    },
+    "One website: the metric of your choice, its trend and who is online." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eine Website: die Kennzahl deiner Wahl, ihr Trend und wer online ist."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un site : la mesure de votre choix, sa tendance et les visiteurs en ligne."
           }
         }
       }
@@ -1715,6 +2042,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ouvrir ${website}"
+          }
+        }
+      }
+    },
+    "Open Pocket Stats on your iPhone to send your servers to the watch." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öffne Pocket Stats auf deinem iPhone, um deine Server an die Uhr zu senden."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrez Pocket Stats sur votre iPhone pour envoyer vos serveurs à la montre."
           }
         }
       }
@@ -1795,22 +2138,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Systèmes d’exploitation"
-          }
-        }
-      }
-    },
-    "OS" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "BS"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "OS"
           }
         }
       }
@@ -2071,6 +2398,22 @@
         }
       }
     },
+    "Ranking" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ranking"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Classement"
+          }
+        }
+      }
+    },
     "Rate the app" : {
       "localizations" : {
         "de" : {
@@ -2163,6 +2506,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Renvoie le nombre de visiteurs d’un site sur une période."
+          }
+        }
+      }
+    },
+    "Rows" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeilen"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lignes"
           }
         }
       }
@@ -2423,6 +2782,54 @@
         }
       }
     },
+    "Shows one metric for several websites." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeigt eine Kennzahl für mehrere Websites."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Affiche une mesure pour plusieurs sites."
+          }
+        }
+      }
+    },
+    "Shows one ranking of a website: pages, referrers, countries…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeigt ein Ranking einer Website: Seiten, Verweise, Länder…"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Affiche un classement d’un site : pages, référents, pays…"
+          }
+        }
+      }
+    },
+    "Shows the statistics of one of your websites." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeigt die Statistiken einer deiner Websites."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Affiche les statistiques d’un de vos sites."
+          }
+        }
+      }
+    },
     "Shows the visitors of one of your websites." : {
       "localizations" : {
         "de" : {
@@ -2451,6 +2858,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Affiche les visiteurs de plusieurs sites."
+          }
+        }
+      }
+    },
+    "Shows who is on your website right now." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeigt, wer gerade auf deiner Website ist."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Affiche qui est sur votre site en ce moment."
           }
         }
       }
@@ -2855,23 +3278,6 @@
         }
       }
     },
-    "today" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "heute"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "aujourd’hui"
-          }
-        }
-      }
-    },
     "Today" : {
       "localizations" : {
         "de" : {
@@ -2884,6 +3290,166 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aujourd’hui"
+          }
+        }
+      }
+    },
+    "Top browsers" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Top-Browser"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Principaux navigateurs"
+          }
+        }
+      }
+    },
+    "Top countries" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Top-Länder"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Principaux pays"
+          }
+        }
+      }
+    },
+    "Top devices" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Top-Geräte"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Principaux appareils"
+          }
+        }
+      }
+    },
+    "Top events" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Top-Ereignisse"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Principaux événements"
+          }
+        }
+      }
+    },
+    "Top operating systems" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Top-Betriebssysteme"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Principaux systèmes"
+          }
+        }
+      }
+    },
+    "Top pages" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Top-Seiten"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Principales pages"
+          }
+        }
+      }
+    },
+    "Top pages, referrers, countries… of one website." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seiten, Verweise, Länder… einer Website."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pages, référents, pays… d’un site."
+          }
+        }
+      }
+    },
+    "Top referrers" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Top-Verweise"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Principaux référents"
+          }
+        }
+      }
+    },
+    "Total" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gesamt"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Total"
+          }
+        }
+      }
+    },
+    "Total %@ of %@, %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gesamt %@ von %@, %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Total %@ de %@, %@"
           }
         }
       }
@@ -2999,9 +3565,6 @@
           }
         }
       }
-    },
-    "umami.example.com" : {
-      "shouldTranslate" : false
     },
     "Unexpected response from the server. Is it running Umami v2 or later?" : {
       "localizations" : {
@@ -3148,6 +3711,22 @@
         }
       }
     },
+    "Views/visit" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aufrufe/Besuch"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vues/visite"
+          }
+        }
+      }
+    },
     "Views: %@" : {
       "localizations" : {
         "de" : {
@@ -3192,22 +3771,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Visiteurs"
-          }
-        }
-      }
-    },
-    "Visitors · %@" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Besucher · %@"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Visiteurs · %@"
           }
         }
       }
@@ -3261,12 +3824,60 @@
         }
       }
     },
+    "Visitors on %@ right now" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Besucher auf %@ gerade jetzt"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visiteurs sur %@ en ce moment"
+          }
+        }
+      }
+    },
+    "Visitors on your website right now, and what they are reading." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Besucher, die gerade auf deiner Website sind, und was sie lesen."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les visiteurs présents sur votre site, et ce qu’ils lisent."
+          }
+        }
+      }
+    },
+    "Visitors on your website right now." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Besucher, die gerade auf deiner Website sind."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les visiteurs présents sur votre site en ce moment."
+          }
+        }
+      }
+    },
     "Visitors on your website right now. Opens the realtime view." : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Die Besucher Ihrer Website in diesem Moment. Öffnet die Echtzeitansicht."
+            "value" : "Die Besucher deiner Website in diesem Moment. Öffnet die Echtzeitansicht."
           }
         },
         "fr" : {
@@ -3306,6 +3917,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Visiteurs du jour"
+          }
+        }
+      }
+    },
+    "Visitors · %@" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Besucher · %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visiteurs · %@"
           }
         }
       }
@@ -3386,6 +4013,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gestion des sites"
+          }
+        }
+      }
+    },
+    "Website ranking" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Website-Ranking"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Classement du site"
           }
         }
       }
@@ -3555,7 +4198,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ihre Websites auf einen Blick, wie eine Watchlist."
+            "value" : "Deine Websites auf einen Blick, wie eine Watchlist."
           }
         },
         "fr" : {
@@ -3565,6 +4208,110 @@
           }
         }
       }
+    },
+    "^[%lld view](inflect: true)" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "^[%lld Aufruf](inflect: true)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "^[%lld vue](inflect: true)"
+          }
+        }
+      }
+    },
+    "^[%lld visitor](inflect: true)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "^[%lld Besucher](inflect: true)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "^[%lld visiteur](inflect: true)"
+          }
+        }
+      }
+    },
+    "^[%lld visitor](inflect: true) online" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "^[%lld Besucher](inflect: true) online"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "^[%lld visiteur](inflect: true) en ligne"
+          }
+        }
+      }
+    },
+    "^[%lld website](inflect: true)" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "^[%lld Website](inflect: true)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "^[%lld site](inflect: true)"
+          }
+        }
+      }
+    },
+    "example.com" : {
+      "shouldTranslate" : false
+    },
+    "online" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "online"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "en ligne"
+          }
+        }
+      }
+    },
+    "today" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "heute"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "aujourd’hui"
+          }
+        }
+      }
+    },
+    "umami.example.com" : {
+      "shouldTranslate" : false
     }
   },
   "version" : "1.0"

@@ -10,10 +10,10 @@ How Pocket Stats for Umami is built: product context, architecture, the quirks o
 
 | | |
 |---|---|
-| **App Store name** | **Pocket Stats for Umami**. The code, the Xcode project (`AnalyticsForUmami`), the product `Analytics for Umami.app`, the bundle IDs and the App Group keep the original name "Analytics for Umami" on purpose: don't rename them. Under the Home Screen icon the name is **"Umami"** (`CFBundleDisplayName`), so the tool is easy to recognize. |
+| **App Store name** | **Pocket Stats for Umami**. The code, the Xcode project (`AnalyticsForUmami`), the product `Analytics for Umami.app`, the bundle IDs and the App Group keep the original name "Analytics for Umami" on purpose: don't rename them. Under the Home Screen icon the name is **"Pocket Stats"** (`CFBundleDisplayName`): App Review (Guideline 2.3.8) requires it to stay close to the App Store name. |
 | **Unofficial** | "Umami" is a trademark of Umami Software, Inc. Always show "Not affiliated with Umami Software, Inc." |
 | **Business model** | Paid up-front on the App Store. No in-app purchases, no subscription, no ads, no tracking. |
-| **Target** | iOS / iPadOS 26.0+, built with Xcode 27 / iOS 27 SDK, Swift 6 |
+| **Target** | iOS / iPadOS 26.0+ and watchOS 26.0+, built with Xcode 27 / iOS 27 SDK, Swift 6 |
 | **Languages** | English (source), French, German |
 
 ### Features
@@ -36,12 +36,22 @@ How Pocket Stats for Umami is built: product context, architecture, the quirks o
   - create (with team choice), edit, delete;
   - reset statistics (with confirmation);
   - show the tracking code and the share link.
-- Widgets inspired by the Stocks app (`Shared/Widgets/`, data in `WebsiteSnapshot`):
-  - "Website" small, medium, large: period curve with a gradient, dashed line = average of the previous period, figure, change badge, visitors online; the large one adds 6 KPIs and the top pages;
-  - "Websites" (watchlist) medium (3) and large (7): chosen websites, otherwise the pinned ones then the others of the current account;
+- Widgets inspired by the Stocks app (`Shared/Widgets/`, data in `WebsiteSnapshot`, configuration enums in `WidgetOptions.swift`):
+  - "Website" small, medium, large: period curve with a gradient, dashed line = average of the previous period, figure, change badge, visitors online; the large one adds 6 KPIs and a breakdown;
+  - "Websites" (watchlist) small (2), medium (3) and large (7): chosen websites, otherwise the pinned ones then the others of the current account;
   - Lock Screen: rectangular (figure + curve), circular (gauge against the previous period), inline;
+  - configurable (`WidgetMetric`, `WidgetBreakdown`, `WatchlistSort`, `WatchlistRows`): the headline metric (visitors, views, visits, bounce rate, visit duration, views per visit), the breakdown at the bottom of the large widget (pages, referrers, countries, browsers, devices, OS, events), the number and the order of the watchlist rows, and whether the previous period is compared at all (off spares one request per website);
+  - Umami serves two series only (pageviews and sessions), so the bounce rate and the visit duration borrow the visits curve and the chart says so (`WidgetMetric.chartedMetric`);
+  - a rise is good everywhere but on the bounce rate (`WidgetMetric.higherIsBetter`), which the badge and the curve colour follow;
   - interactive: the period label is a button (today → 24 h → 7 d → 30 d), stored per widget in `WidgetPeriodStore` until the next configuration change;
   - a tap opens the website in the app (deep link).
+- **Widget rendering modes.** A Home Screen widget is drawn in `.fullColor`, `.accented` (tinted and iOS 26 clear styles) or `.vibrant` (Lock Screen). The last two flatten every fill into one colour, so a coloured shape with white text on it reads as an empty white block — which is exactly what `ChangePill` did until 1.2. Anything that carries meaning through colour alone must have a non-colour fallback, and `@Environment(\.widgetRenderingMode)` is the switch. `.widgetAccentable()` marks what belongs to the accent group: the headline figure and the curve, not the badges.
+- Three more widgets, each with its own snapshot type in `Shared/Widgets/`:
+  - **Ranking** (`BreakdownSnapshot`, small/medium/large): one ranking of one website, 3/4/8 rows with a share bar. One request.
+  - **Live** (`LiveSnapshot`, small/medium/Lock Screen): visitors online now and, on medium, the pages they opened in the last 30 minutes. Umami has no minute-by-minute series, so `LiveHistoryStore` keeps the counts the widget itself observed (App Group, 24 samples, dropped after a day) and draws them as **bars**: the samples are spaced by whatever the reload budget allowed, and a line would invent the gaps.
+  - **Total** (`TotalSnapshot`, small/medium): several websites added up, capped at 10. The raw `WebsiteStats.Values` counters are summed and the ratios computed afterwards, which weights the bounce rate and the visit duration correctly.
+- **Reload budget** (`WidgetRefresh`). WidgetKit grants a widget roughly 40–70 reloads a day; the old fixed 15-minute policy asked for 96 and got throttled at hours the system chose. The interval now follows the content: 20 min with visitors online, 45 min without, 1 h on 7/30 days, 3 h between 01:00 and 06:00, and 15 min for the Live widget. Entries also carry a `TimelineEntryRelevance` so the Smart Stack surfaces a website that is moving.
+- **Requests per refresh.** `WebsiteSnapshot.load` asks for the stats (which already carry the previous period) plus the curve, and derives the dashed baseline from `stats.previous` divided by the bucket count instead of a second traffic request. `includeSeries: false` drops the curve request where nothing draws one (small watchlist, small total). Counts: Ranking 1, Live 1–2, Website 2–4, watchlist 1–2 per website, Total 1–2 per website.
 - "Live visitors" control (Control Center, Lock Screen, Action button): visitors online, opens realtime.
 - Siri and Shortcuts (`PocketStatsShortcuts`, phrases translated in `AnalyticsForUmami/AppShortcuts.xcstrings`): "How many visitors on … in Umami" (answer + card), "Open … in Umami".
 - Home Screen quick actions (`QuickActions`): realtime of the last opened website and 3 recent websites.
@@ -49,7 +59,7 @@ How Pocket Stats for Umami is built: product context, architecture, the quirks o
 - iPad: two-column `NavigationSplitView`.
 
 ### Ideas (not done)
-User and team management (admin), Umami reports (funnels, retention, UTM, goals), filters (by URL, country…), custom period comparison, Apple Watch. Live Activities were ruled out: without a push server they only update while the app runs.
+User and team management (admin), Umami reports (funnels, retention, UTM, goals), filters (by URL, country…), custom period comparison. Live Activities were ruled out: without a push server they only update while the app runs.
 
 ---
 
@@ -90,9 +100,30 @@ The full list of variables is documented at the top of `DebugLaunch.swift`. High
 - `UMAMI_DEBUG_SHARE=<share link>` adds a share link account;
 - `UMAMI_DEBUG_LINK=<deep link>` opens an `analyticsforumami://…` link;
 - `UMAMI_DEBUG_SCREEN=widgets` shows every widget at its real size with sample data; `sections|realtime|code|edit` scrolls the dashboard or opens that screen (used for the App Store screenshots);
+- `UMAMI_DEBUG_GALLERY=bottom|center` scrolls the widget gallery, `UMAMI_DEBUG_GALLERY_MODE=tinted|lockscreen` renders it in the tinted or Lock Screen rendering mode (the picker at the top does the same by hand). The gallery only approximates what the system does to the colours, but it catches white-on-white and lost fills;
 - `UMAMI_DEBUG_PERIODS=today,last30Days` switches the dashboard through these periods, to check that every section follows.
 
 All this code is inside `#if DEBUG` and absent from Release builds. Then `xcrun simctl io booted screenshot out.png` takes a screenshot.
+
+### The watch app
+```sh
+# Build and run on a paired watch simulator
+xcodebuild -project AnalyticsForUmami.xcodeproj -scheme AnalyticsWatch \
+  -destination 'platform=watchOS Simulator,name=Apple Watch Ultra 4 (49mm)' build
+
+# The two simulators must be paired for WatchConnectivity to work
+xcrun simctl list pairs
+```
+The watch app has its own `WatchDebugLaunch`: `UMAMI_DEBUG_DEMO=1` puts the demo account in the
+watch's own stores (and turns the bridge off, which would otherwise overwrite them with whatever
+the paired iPhone last sent), `UMAMI_DEBUG_PIN` pins demo websites, `UMAMI_DEBUG_WEBSITE=first|<id>`
+opens a website straight away, `UMAMI_DEBUG_SCROLL=bottom|center` says where it opens, and
+`UMAMI_DEBUG_SCREEN=complications` shows every complication with sample data — a watch face cannot
+be composed from the command line, so that gallery is how their design is checked.
+
+Building for a specific watch simulator prints `Could not get trait set for device Watch…`:
+that is `actool` not knowing that simulator model, not a problem with the assets. A
+`generic/platform=watchOS` build — what an archive does — is clean.
 
 ### Test instance
 Use your own Umami instance, a share link, or the demo mode. Never test write operations (create, edit, delete, reset) on websites you care about: create a throwaway website (`zz-test-…`) and delete it afterwards.
@@ -112,10 +143,15 @@ AnalyticsForUmami/            App target
   Views/Settings/             Settings (accounts, about)
   Assets.xcassets             AppIcon (light / dark / tinted)
 AnalyticsWidget/              WidgetKit extension target (configuration AppIntent, timeline, views)
-Shared/                       Compiled into BOTH targets (app + widget)
+AnalyticsWatch/               watchOS app target, embedded in the iOS app (one App Store record, one review)
+  App/                        Entry point, WatchModel (accounts, websites, snapshots), WatchRootView, WatchDebugLaunch
+  Views/                      Website list, website screen, account switch, debug complication gallery
+  Assets.xcassets             Watch app icon
+AnalyticsWatchWidget/         Complications: WidgetKit extension inside the watch app (PlugIns/)
+Shared/                       Compiled into ALL FOUR targets (app + widget + watch + complications)
   API/                        AnalyticsService (protocol), UmamiClient (REST), CachingService (short cache + shared requests), UmamiError
   Models/                     Website, WebsiteStats, TrafficSeries, MetricItem, MetricType, Account, DateSelection
-  Storage/                    AccountStore (App Group UserDefaults), CredentialStore (Keychain)
+  Storage/                    AccountStore (App Group UserDefaults), CredentialStore (Keychain), WatchLink (iPhone ⇄ watch)
   Demo/                       DemoService: deterministic fictional data
   Intents/                    App Intents (Siri, Shortcuts, widget configuration)
   Widgets/                    Widget views and data (WebsiteSnapshot), also used by the app
@@ -147,6 +183,31 @@ Config/                       Info.plists, entitlements, Signing.xcconfig (outsi
   - passwords, tokens and API keys are in the **Keychain** (`CredentialStore`), with the App Group as access group so the widget can read them;
   - account metadata (no secrets) is in the App Group `UserDefaults`;
   - the password is kept to sign in again automatically on a 401.
+- **The watch**: it is a separate device, so none of the storage above reaches it. An App Group
+  is shared between an app and its extensions on **one** device; the watch starts empty.
+  `Shared/Storage/WatchLink.swift` holds both ends of the bridge in one file:
+  - the iPhone pushes a `WatchSyncPayload` (accounts, pinned websites, selected account and the
+    secrets) with `updateApplicationContext` — "latest state wins", delivered whenever the watch
+    comes back, no queue to drain. `AppModel` and `WebsitesModel` call `send()` on every change;
+  - the watch writes it into its own App Group and Keychain, then posts `.watchSyncDidChange`;
+  - a watch that finds itself empty calls `requestSync()`, which wakes the iPhone app in the
+    background to answer.
+  The payload carries the password or the API key, not only the token, so the watch refreshes its
+  own session on a 401 exactly like the phone and never needs the iPhone again. A
+  WatchConnectivity transfer goes device to device over an encrypted link; nothing passes through
+  a server. `WCSession.isSupported()` is false on iPad, where the whole thing is a no-op.
+- **Platform differences**: the UIKit system colours are `API_UNAVAILABLE(watchos)`, so
+  `Color.positive` / `.negative` / `.muted` (`Shared/Support/PlatformColors.swift`) stand in for
+  them. `WidgetFamily.systemSmall` and friends do not exist on watchOS either: the widget views
+  and sizes that depend on them are behind `#if os(iOS)`, and `.accessoryCorner`, which only
+  exists where there is a round screen to curve against, behind `#if os(watchOS)`.
+- **Complications**: the four accessory families of a watch face, in `AnalyticsWatchWidget/`.
+  The views are the Lock Screen ones from `Shared/Widgets/`, so a change lands on both at once.
+  Two differences from the iOS extension: `AppIntentTimelineProvider.recommendations()` is
+  **required** on watchOS (a face gallery needs ready-made entries, and it answers synchronously,
+  so the recommendations leave the website unset and the provider resolves it), and only the
+  rectangular family draws a curve or asks who is online — the others would spend a request on
+  something they cannot show.
 - **Privacy**: no request to any third party. Favicons are deliberately not loaded (colored monograms instead), otherwise an external service would learn which domains are tracked.
 - **Concurrency**: Swift 6, `SWIFT_APPROACHABLE_CONCURRENCY = YES`, default isolation non-MainActor. Views and models are `@MainActor`, services `Sendable`.
 - **Destructive actions**:

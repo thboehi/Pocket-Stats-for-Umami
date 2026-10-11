@@ -15,11 +15,13 @@ enum Trend {
         self = change > 0 ? .up : .down
     }
 
-    var color: Color {
+    /// Green when the move is good, red when it is bad. A rising bounce rate is
+    /// bad, hence `higherIsBetter`.
+    func color(higherIsBetter: Bool = true) -> Color {
         switch self {
-        case .up: Color(.systemGreen)
-        case .down: Color(.systemRed)
-        case .flat: Color(.systemGray)
+        case .up: higherIsBetter ? .positive : .negative
+        case .down: higherIsBetter ? .negative : .positive
+        case .flat: .muted
         }
     }
 
@@ -43,6 +45,9 @@ struct TrendSparkline: View {
     var showsFill = true
     var showsTimeAxis = false
     var unit: TimeUnit = .hour
+    /// Set when the curve is not the headline metric, so the widget never
+    /// passes off one series for another.
+    var legend: LocalizedStringResource?
 
     @Environment(\.widgetRenderingMode) private var renderingMode
 
@@ -89,30 +94,65 @@ struct TrendSparkline: View {
             }
         }
         .chartLegend(.hidden)
+        .overlay(alignment: .topTrailing) {
+            if let legend {
+                Text(legend)
+                    .font(.system(size: 9, weight: .semibold))
+                    .foregroundStyle(.secondary)
+            }
+        }
         .accessibilityHidden(true)
     }
 }
 
 /// White percentage on a green or red rounded rectangle, like the Stocks app.
+///
+/// Tinted Home Screens (`.accented`) and the Lock Screen (`.vibrant`) flatten
+/// every fill into a single colour: the pill and its white text would land on
+/// the same colour and read as an empty white block. Outside `.fullColor` the
+/// badge drops its background and shows the direction with an arrow instead.
 struct ChangePill: View {
     let change: Double?
+    var higherIsBetter = true
     var minWidth: CGFloat = 56
     var font: Font = .system(size: 12, weight: .semibold, design: .rounded)
 
+    @Environment(\.widgetRenderingMode) private var renderingMode
+
+    private var trend: Trend { Trend(change) }
+
+    private var label: String {
+        guard let change else { return "–" }
+        return trend == .flat ? "0 %" : Format.signedPercent(change)
+    }
+
     var body: some View {
-        let trend = Trend(change)
-        Text(change.map { Trend($0) == .flat ? "0 %" : Format.signedPercent($0) } ?? "–")
-            .font(font)
-            .monospacedDigit()
-            .lineLimit(1)
-            .minimumScaleFactor(0.7)
-            .foregroundStyle(.white)
-            .padding(.horizontal, 6)
-            .padding(.vertical, 2.5)
-            .frame(minWidth: minWidth, alignment: .trailing)
-            .background(trend.color, in: .rect(cornerRadius: 5, style: .continuous))
-            .widgetAccentable()
-            .accessibilityLabel(Text(change.map { "\(Format.signedPercent($0)) compared to the previous period" } ?? ""))
+        Group {
+            if renderingMode == .fullColor {
+                Text(label)
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2.5)
+                    .frame(minWidth: minWidth, alignment: .trailing)
+                    .background(trend.color(higherIsBetter: higherIsBetter), in: .rect(cornerRadius: 5, style: .continuous))
+            } else {
+                HStack(spacing: 1) {
+                    if change != nil {
+                        Image(systemName: trend.systemImage)
+                            .font(font.weight(.bold))
+                            .imageScale(.small)
+                    }
+                    Text(label)
+                }
+                .padding(.vertical, 2.5)
+                .frame(minWidth: minWidth, alignment: .trailing)
+            }
+        }
+        .font(font)
+        .monospacedDigit()
+        .lineLimit(1)
+        .minimumScaleFactor(0.7)
+        .accessibilityLabel(Text(change.map { "\(Format.signedPercent($0)) compared to the previous period" } ?? ""))
     }
 }
 
@@ -124,7 +164,7 @@ struct LiveIndicator: View {
         if let count {
             HStack(spacing: 4) {
                 Circle()
-                    .fill(count > 0 ? Color(.systemGreen) : Color.secondary.opacity(0.6))
+                    .fill(count > 0 ? Color.positive : Color.secondary.opacity(0.6))
                     .frame(width: 6, height: 6)
                 Text("\(count)")
                     .font(.system(size: 12, weight: .semibold, design: .rounded))
@@ -137,12 +177,32 @@ struct LiveIndicator: View {
     }
 }
 
+/// What a widget shows instead of figures: no account yet, no website, or the
+/// server did not answer.
+struct WidgetMessageView: View {
+    let systemImage: String
+    let text: Text
+
+    var body: some View {
+        VStack(spacing: 6) {
+            Image(systemName: systemImage)
+                .font(.title2)
+                .foregroundStyle(.secondary)
+            text
+                .font(.caption)
+                .multilineTextAlignment(.center)
+                .foregroundStyle(.secondary)
+        }
+    }
+}
+
 /// "Visitors · Today ⌃⌄": a button that switches the period when the widget
 /// supports it, plain text otherwise.
 struct PeriodLabel: View {
     let period: WidgetPeriod
+    /// `nil` prints the period alone.
+    var metric: WidgetMetric? = .visitors
     var widgetKey: String?
-    var showsMetric = true
 
     var body: some View {
         if let widgetKey {
@@ -155,8 +215,8 @@ struct PeriodLabel: View {
 
     private func label(interactive: Bool) -> some View {
         HStack(spacing: 3) {
-            if showsMetric {
-                Text("Visitors · \(Text(period.shortTitle))")
+            if let metric {
+                Text("\(Text(metric.shortTitle)) · \(Text(period.shortTitle))")
             } else {
                 Text(period.shortTitle)
             }
@@ -192,5 +252,58 @@ struct WidgetFigure: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .accessibilityElement(children: .combine)
+    }
+}
+
+/// The configured list at the bottom of the large widget: top pages,
+/// referrers, countries… Each row carries a bar for its share of the total.
+struct BreakdownList: View {
+    let type: MetricType
+    let items: [MetricItem]
+    var rowCount = 3
+    /// Small families have no room for the header line.
+    var compact = false
+
+    private var rows: [MetricItem] { Array(items.prefix(rowCount)) }
+    private var maxCount: Double { max(rows.map(\.count).max() ?? 0, 1) }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: compact ? 3 : 5) {
+            if !compact {
+                HStack {
+                    Text(type.title)
+                    Spacer(minLength: 8)
+                    Text(type.countLabel)
+                }
+                .font(.system(size: 10, weight: .semibold))
+                .foregroundStyle(.secondary)
+            }
+
+            ForEach(rows) { item in
+                HStack(spacing: 6) {
+                    if let symbol = type.leadingSymbol(for: item) {
+                        Text(symbol).font(.system(size: 11))
+                    }
+                    Text(type.displayName(for: item))
+                        .lineLimit(1)
+                        .truncationMode(.middle)
+                    Spacer(minLength: 8)
+                    Text(Format.number(item.count))
+                        .monospacedDigit()
+                        .foregroundStyle(.secondary)
+                }
+                .font(.system(size: compact ? 11 : 12, weight: .medium))
+                .padding(.horizontal, 5)
+                .padding(.vertical, 2)
+                .background(alignment: .leading) {
+                    GeometryReader { proxy in
+                        RoundedRectangle(cornerRadius: 4, style: .continuous)
+                            .fill(Color.secondary.opacity(0.16))
+                            .frame(width: max(proxy.size.width * item.count / maxCount, 3))
+                    }
+                }
+                .accessibilityElement(children: .combine)
+            }
+        }
     }
 }

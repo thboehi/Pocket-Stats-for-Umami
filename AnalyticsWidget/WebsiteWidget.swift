@@ -6,13 +6,29 @@ import WidgetKit
 
 struct SelectWebsiteIntent: WidgetConfigurationIntent {
     static let title: LocalizedStringResource = "Website statistics"
-    static let description = IntentDescription("Shows the visitors of one of your websites.")
+    static let description = IntentDescription("Shows the statistics of one of your websites.")
 
     @Parameter(title: "Website")
     var website: WebsiteEntity?
 
+    @Parameter(title: "Metric", default: .visitors)
+    var metric: WidgetMetric
+
     @Parameter(title: "Period", default: .today)
     var period: WidgetPeriod
+
+    @Parameter(title: "Details", default: .pages)
+    var breakdown: WidgetBreakdown
+
+    @Parameter(title: "Compare with previous period", default: true)
+    var comparing: Bool
+
+    static var parameterSummary: some ParameterSummary {
+        Summary("\(\.$metric) of \(\.$website), \(\.$period)") {
+            \.$breakdown
+            \.$comparing
+        }
+    }
 
     init() {}
 }
@@ -30,6 +46,7 @@ struct WebsiteEntry: TimelineEntry {
     let date: Date
     let content: Content
     var widgetKey: String?
+    var relevance: TimelineEntryRelevance?
 }
 
 struct WebsiteTimelineProvider: AppIntentTimelineProvider {
@@ -39,20 +56,25 @@ struct WebsiteTimelineProvider: AppIntentTimelineProvider {
 
     func snapshot(for configuration: SelectWebsiteIntent, in context: Context) async -> WebsiteEntry {
         // The widget gallery needs an answer right away: show sample data.
-        if context.isPreview { return placeholder(in: context) }
+        if context.isPreview {
+            return WebsiteEntry(date: .now, content: .snapshot(.sample(metric: configuration.metric,
+                                                                       breakdownType: configuration.breakdown.metricType)))
+        }
         return await entry(for: configuration, family: context.family)
     }
 
     func timeline(for configuration: SelectWebsiteIntent, in context: Context) async -> Timeline<WebsiteEntry> {
         let entry = await entry(for: configuration, family: context.family)
-        return Timeline(entries: [entry], policy: .after(.now.addingTimeInterval(15 * 60)))
+        let active: Int? = if case .snapshot(let snapshot) = entry.content { snapshot.activeVisitors } else { nil }
+        return Timeline(entries: [entry],
+                        policy: WidgetRefresh.policy(period: configuration.period, activeVisitors: active))
     }
 
     private func entry(for configuration: SelectWebsiteIntent, family: WidgetFamily) async -> WebsiteEntry {
         let accounts = AccountStore.load()
         guard !accounts.isEmpty else { return WebsiteEntry(date: .now, content: .noAccount) }
 
-        let widgetKey = "website|\(configuration.website?.id ?? "auto")"
+        let widgetKey = "website|\(configuration.website?.id ?? "auto")|\(configuration.metric.rawValue)"
         let period = WidgetPeriodStore.period(for: widgetKey, configured: configuration.period)
 
         // The configured website, or the first favorite of the current account.
@@ -74,8 +96,13 @@ struct WebsiteTimelineProvider: AppIntentTimelineProvider {
 
         do {
             let snapshot = try await WebsiteSnapshot.load(account: account, website: website, period: period,
-                                                          includeTopPages: family == .systemLarge)
-            return WebsiteEntry(date: .now, content: .snapshot(snapshot), widgetKey: widgetKey)
+                                                          metric: configuration.metric,
+                                                          comparing: configuration.comparing,
+                                                          breakdown: family == .systemLarge ? configuration.breakdown.metricType : nil,
+                                                          includeSeries: family != .accessoryInline)
+            return WebsiteEntry(date: .now, content: .snapshot(snapshot), widgetKey: widgetKey,
+                                relevance: WidgetRefresh.relevance(change: snapshot.change,
+                                                                   activeVisitors: snapshot.activeVisitors))
         } catch {
             return WebsiteEntry(date: .now, content: .failure(error.localizedDescription))
         }
@@ -90,7 +117,7 @@ struct WebsiteWidget: Widget {
             WebsiteWidgetView(entry: entry)
         }
         .configurationDisplayName("Website")
-        .description("Visitors of one website, with their trend and who is online.")
+        .description("One website: the metric of your choice, its trend and who is online.")
         .supportedFamilies([.systemSmall, .systemMedium, .systemLarge, .accessoryRectangular, .accessoryCircular, .accessoryInline])
     }
 }
@@ -135,23 +162,6 @@ struct WebsiteWidgetView: View {
     }
 }
 
-struct WidgetMessageView: View {
-    let systemImage: String
-    let text: Text
-
-    var body: some View {
-        VStack(spacing: 6) {
-            Image(systemName: systemImage)
-                .font(.title2)
-                .foregroundStyle(.secondary)
-            text
-                .font(.caption)
-                .multilineTextAlignment(.center)
-                .foregroundStyle(.secondary)
-        }
-    }
-}
-
 #Preview("Small", as: .systemSmall) {
     WebsiteWidget()
 } timeline: {
@@ -164,8 +174,20 @@ struct WidgetMessageView: View {
     WebsiteEntry(date: .now, content: .snapshot(.sample()))
 }
 
+#Preview("Medium · bounce rate", as: .systemMedium) {
+    WebsiteWidget()
+} timeline: {
+    WebsiteEntry(date: .now, content: .snapshot(.sample(metric: .bounceRate)))
+}
+
 #Preview("Large", as: .systemLarge) {
     WebsiteWidget()
 } timeline: {
     WebsiteEntry(date: .now, content: .snapshot(.sample()))
+}
+
+#Preview("Large · referrers", as: .systemLarge) {
+    WebsiteWidget()
+} timeline: {
+    WebsiteEntry(date: .now, content: .snapshot(.sample(metric: .pageviews, breakdownType: .referrer)))
 }

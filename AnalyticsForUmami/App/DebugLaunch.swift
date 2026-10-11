@@ -21,7 +21,8 @@ import Foundation
 ///   breakdowns or open that screen (used for the App Store screenshots).
 ///   `accounts` opens the accounts panel, `home` shows the widgets on a mock
 ///   Home Screen, `widgets` all the widgets, `settings` opens Settings, `share`
-///   the share link form from the welcome screen.
+///   the share link form from the welcome screen, `signout` the sign-out
+///   confirmation of the current account.
 enum DebugLaunch {
     static var environment: [String: String] { ProcessInfo.processInfo.environment }
 

@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		7A0000000000000000000050 /* AnalyticsWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 7A0000000000000000000021 /* AnalyticsWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		7A0000000000000000000053 /* AnalyticsWatch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 7A0000000000000000000023 /* AnalyticsWatch.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		7A0000000000000000000056 /* AnalyticsWatchWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 7A0000000000000000000024 /* AnalyticsWatchWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -17,6 +19,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 7A0000000000000000000031;
 			remoteInfo = AnalyticsWidgetExtension;
+		};
+		7A0000000000000000000054 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7A0000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A0000000000000000000032;
+			remoteInfo = AnalyticsWatch;
+		};
+		7A0000000000000000000057 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7A0000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A0000000000000000000033;
+			remoteInfo = AnalyticsWatchWidgetExtension;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -32,12 +48,36 @@
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7A000000000000000000004A /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				7A0000000000000000000053 /* AnalyticsWatch.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A000000000000000000004E /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				7A0000000000000000000056 /* AnalyticsWatchWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		7A0000000000000000000020 /* Analytics for Umami.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Analytics for Umami.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A0000000000000000000021 /* AnalyticsWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AnalyticsWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A0000000000000000000022 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		7A0000000000000000000023 /* AnalyticsWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnalyticsWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A0000000000000000000024 /* AnalyticsWatchWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AnalyticsWatchWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -61,6 +101,16 @@
 			path = Config;
 			sourceTree = "<group>";
 		};
+		7A0000000000000000000014 /* AnalyticsWatch */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = AnalyticsWatch;
+			sourceTree = "<group>";
+		};
+		7A0000000000000000000015 /* AnalyticsWatchWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = AnalyticsWatchWidget;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +128,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7A0000000000000000000048 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A000000000000000000004C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -87,6 +151,8 @@
 				7A0000000000000000000022 /* README.md */,
 				7A0000000000000000000010 /* AnalyticsForUmami */,
 				7A0000000000000000000012 /* AnalyticsWidget */,
+				7A0000000000000000000014 /* AnalyticsWatch */,
+				7A0000000000000000000015 /* AnalyticsWatchWidget */,
 				7A0000000000000000000011 /* Shared */,
 				7A0000000000000000000013 /* Config */,
 				7A0000000000000000000003 /* Products */,
@@ -97,6 +163,8 @@
 			isa = PBXGroup;
 			children = (
 				7A0000000000000000000020 /* Analytics for Umami.app */,
+				7A0000000000000000000023 /* AnalyticsWatch.app */,
+				7A0000000000000000000024 /* AnalyticsWatchWidgetExtension.appex */,
 				7A0000000000000000000021 /* AnalyticsWidgetExtension.appex */,
 			);
 			name = Products;
@@ -112,11 +180,13 @@
 				7A0000000000000000000040 /* Sources */,
 				7A0000000000000000000041 /* Frameworks */,
 				7A0000000000000000000042 /* Resources */,
+				7A000000000000000000004A /* Embed Watch Content */,
 				7A0000000000000000000043 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				7A0000000000000000000055 /* PBXTargetDependency */,
 				7A0000000000000000000051 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
@@ -149,6 +219,50 @@
 			productReference = 7A0000000000000000000021 /* AnalyticsWidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		7A0000000000000000000032 /* AnalyticsWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7A0000000000000000000063 /* Build configuration list for PBXNativeTarget "AnalyticsWatch" */;
+			buildPhases = (
+				7A0000000000000000000047 /* Sources */,
+				7A0000000000000000000048 /* Frameworks */,
+				7A0000000000000000000049 /* Resources */,
+				7A000000000000000000004E /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7A0000000000000000000058 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				7A0000000000000000000011 /* Shared */,
+				7A0000000000000000000014 /* AnalyticsWatch */,
+			);
+			name = AnalyticsWatch;
+			productName = AnalyticsWatch;
+			productReference = 7A0000000000000000000023 /* AnalyticsWatch.app */;
+			productType = "com.apple.product-type.application";
+		};
+		7A0000000000000000000033 /* AnalyticsWatchWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7A0000000000000000000064 /* Build configuration list for PBXNativeTarget "AnalyticsWatchWidgetExtension" */;
+			buildPhases = (
+				7A000000000000000000004B /* Sources */,
+				7A000000000000000000004C /* Frameworks */,
+				7A000000000000000000004D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				7A0000000000000000000011 /* Shared */,
+				7A0000000000000000000015 /* AnalyticsWatchWidget */,
+			);
+			name = AnalyticsWatchWidgetExtension;
+			productName = AnalyticsWatchWidgetExtension;
+			productReference = 7A0000000000000000000024 /* AnalyticsWatchWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -164,6 +278,12 @@
 					};
 					7A0000000000000000000031 = {
 						CreatedOnToolsVersion = 27.0;
+					};
+					7A0000000000000000000032 = {
+						CreatedOnToolsVersion = 27.1;
+					};
+					7A0000000000000000000033 = {
+						CreatedOnToolsVersion = 27.1;
 					};
 				};
 			};
@@ -184,6 +304,8 @@
 			projectRoot = "";
 			targets = (
 				7A0000000000000000000030 /* AnalyticsForUmami */,
+				7A0000000000000000000032 /* AnalyticsWatch */,
+				7A0000000000000000000033 /* AnalyticsWatchWidgetExtension */,
 				7A0000000000000000000031 /* AnalyticsWidgetExtension */,
 			);
 		};
@@ -198,6 +320,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		7A0000000000000000000046 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A0000000000000000000049 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A000000000000000000004D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -221,6 +357,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7A0000000000000000000047 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A000000000000000000004B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -228,6 +378,16 @@
 			isa = PBXTargetDependency;
 			target = 7A0000000000000000000031 /* AnalyticsWidgetExtension */;
 			targetProxy = 7A0000000000000000000052 /* PBXContainerItemProxy */;
+		};
+		7A0000000000000000000055 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A0000000000000000000032 /* AnalyticsWatch */;
+			targetProxy = 7A0000000000000000000054 /* PBXContainerItemProxy */;
+		};
+		7A0000000000000000000058 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A0000000000000000000033 /* AnalyticsWatchWidgetExtension */;
+			targetProxy = 7A0000000000000000000057 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -252,7 +412,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 6;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -273,7 +433,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.3;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -307,7 +467,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 6;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -322,7 +482,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
@@ -345,7 +505,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Config/AnalyticsForUmami-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = Umami;
+				INFOPLIST_KEY_CFBundleDisplayName = "Pocket Stats";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -377,7 +537,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Config/AnalyticsForUmami-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = Umami;
+				INFOPLIST_KEY_CFBundleDisplayName = "Pocket Stats";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -449,6 +609,114 @@
 			};
 			name = Release;
 		};
+		7A0000000000000000000076 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Config/AnalyticsWatch.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Config/AnalyticsWatch-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Pocket Stats";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "$(APP_BUNDLE_ID)";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID).watchkitapp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Debug;
+		};
+		7A0000000000000000000077 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Config/AnalyticsWatch.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Config/AnalyticsWatch-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Pocket Stats";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "$(APP_BUNDLE_ID)";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID).watchkitapp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Release;
+		};
+		7A0000000000000000000078 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Config/AnalyticsWatchWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Config/AnalyticsWatchWidget-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Pocket Stats";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID).watchkitapp.widget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Debug;
+		};
+		7A0000000000000000000079 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Config/AnalyticsWatchWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Config/AnalyticsWatchWidget-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Pocket Stats";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID).watchkitapp.widget";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "watchos watchsimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -475,6 +743,24 @@
 			buildConfigurations = (
 				7A0000000000000000000074 /* Debug */,
 				7A0000000000000000000075 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7A0000000000000000000063 /* Build configuration list for PBXNativeTarget "AnalyticsWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A0000000000000000000076 /* Debug */,
+				7A0000000000000000000077 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7A0000000000000000000064 /* Build configuration list for PBXNativeTarget "AnalyticsWatchWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A0000000000000000000078 /* Debug */,
+				7A0000000000000000000079 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

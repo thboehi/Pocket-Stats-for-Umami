@@ -5,7 +5,7 @@
 <h1 align="center">Pocket Stats for Umami</h1>
 
 <p align="center">
-  A native iPhone and iPad app for <a href="https://umami.is">Umami</a>, the open-source, privacy-friendly web analytics.<br>
+  A native iPhone, iPad and Apple Watch app for <a href="https://umami.is">Umami</a>, the open-source, privacy-friendly web analytics.<br>
   Self-hosted servers, Umami Cloud and share links.
 </p>
 
@@ -41,9 +41,10 @@ I'm a web developer, not an iOS developer. This app was coded with the help of *
 - **Websites list** with sparklines, change badges, pinned websites and a period of your choice.
 - **Website management**: create, edit, delete, reset, tracking code.
 - **Widgets** for the Home Screen and Lock Screen, a **Control Center** control, **Siri and Shortcuts**.
+- **Apple Watch**: your websites, their figures and curves, and complications for the watch face. The watch reaches your server on its own, over Wi-Fi or cellular.
 - **Several accounts** side by side: self-hosted (username and password), Umami Cloud (API key) or a read-only share link.
 - **Demo mode** to try everything without a server.
-- English, French and German. iOS and iPadOS 26 or later.
+- English, French and German. iOS and iPadOS 26 or later, watchOS 26 or later.
 
 ## Privacy
 
@@ -68,7 +69,7 @@ The source is public so that anyone can read it, check what it does with their d
    - `APP_BUNDLE_ID` to an identifier of your own, such as `com.yourname.pocketstats`.
 
    The widget and the App Group derive their identifiers from it. `Local.xcconfig` is ignored by git.
-3. Select the `AnalyticsForUmami` scheme and your device, then press ⌘R. Xcode registers the identifiers and the App Group on the first build.
+3. Select the `AnalyticsForUmami` scheme and your device, then press ⌘R. Xcode registers the identifiers and the App Group on the first build — four of them, since the widget, the watch app and its complications have their own.
 
 To try it in the Simulator, no signing setup is needed: pick a simulator and press ⌘R.
 

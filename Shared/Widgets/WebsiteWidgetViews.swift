@@ -3,17 +3,21 @@ import SwiftUI
 import WidgetKit
 
 /// Big number of a widget, in the rounded digits of the Stocks widgets.
+/// `value` only drives the rolling transition; `text` is what is printed, so a
+/// duration or a percentage reads correctly.
 private struct HeadlineNumber: View {
+    let text: String
     let value: Double
     var size: CGFloat
 
     var body: some View {
-        Text(Format.number(value))
+        Text(text)
             .font(.system(size: size, weight: .semibold, design: .rounded))
             .monospacedDigit()
             .lineLimit(1)
             .minimumScaleFactor(0.5)
             .contentTransition(.numericText(value: value))
+            .widgetAccentable()
     }
 }
 
@@ -27,7 +31,6 @@ private struct SiteTitle: View {
             Text(snapshot.name)
                 .font(nameFont)
                 .lineLimit(1)
-                .widgetAccentable()
             if showsDomain, let domain = snapshot.domain, !domain.isEmpty, domain != snapshot.name {
                 Text(domain)
                     .font(.system(size: 11, weight: .medium))
@@ -38,9 +41,21 @@ private struct SiteTitle: View {
     }
 }
 
+extension WebsiteSnapshot {
+    /// Colour of the curve and of the change badge, red when the move is bad.
+    var trendColor: Color {
+        Trend(change).color(higherIsBetter: metric.higherIsBetter)
+    }
+
+    /// Set when the curve shows another series than the headline figure.
+    var chartLegend: LocalizedStringResource? {
+        metric.chartsItself ? nil : metric.chartedMetric.shortTitle
+    }
+}
+
 // MARK: - Single website
 
-/// Small: name, line of the period, number of visitors and change.
+/// Small: name, line of the period, the chosen figure and its change.
 struct SmallWebsiteWidgetView: View {
     let snapshot: WebsiteSnapshot
     var widgetKey: String?
@@ -52,15 +67,18 @@ struct SmallWebsiteWidgetView: View {
                 Spacer(minLength: 0)
                 LiveIndicator(count: snapshot.activeVisitors)
             }
-            TrendSparkline(points: snapshot.visitors, baseline: snapshot.baseline, domain: snapshot.chartDomain,
-                           color: Trend(snapshot.change).color)
+            TrendSparkline(points: snapshot.series, baseline: snapshot.baseline, domain: snapshot.chartDomain,
+                           color: snapshot.trendColor)
+                .widgetAccentable()
                 .padding(.vertical, 8)
             HStack(alignment: .lastTextBaseline, spacing: 6) {
-                HeadlineNumber(value: snapshot.stats.current.visitors, size: 26)
+                HeadlineNumber(text: snapshot.headline, value: snapshot.value, size: 26)
                 Spacer(minLength: 0)
-                ChangePill(change: snapshot.change, minWidth: 0)
+                if snapshot.comparing {
+                    ChangePill(change: snapshot.change, higherIsBetter: snapshot.metric.higherIsBetter, minWidth: 0)
+                }
             }
-            PeriodLabel(period: snapshot.period, widgetKey: widgetKey)
+            PeriodLabel(period: snapshot.period, metric: snapshot.metric, widgetKey: widgetKey)
                 .padding(.top, 1)
         }
     }
@@ -77,19 +95,23 @@ struct MediumWebsiteWidgetView: View {
             VStack(alignment: .leading, spacing: 0) {
                 SiteTitle(snapshot: snapshot)
                 Spacer(minLength: 6)
-                HeadlineNumber(value: snapshot.stats.current.visitors, size: 30)
-                PeriodLabel(period: snapshot.period, widgetKey: widgetKey)
+                HeadlineNumber(text: snapshot.headline, value: snapshot.value, size: 30)
+                PeriodLabel(period: snapshot.period, metric: snapshot.metric, widgetKey: widgetKey)
                     .padding(.bottom, 6)
                 HStack(spacing: 8) {
-                    ChangePill(change: snapshot.change, minWidth: 0)
+                    if snapshot.comparing {
+                        ChangePill(change: snapshot.change, higherIsBetter: snapshot.metric.higherIsBetter, minWidth: 0)
+                    }
                     LiveIndicator(count: snapshot.activeVisitors)
                 }
             }
             .frame(width: 138, alignment: .leading)
 
             VStack(spacing: 8) {
-                TrendSparkline(points: snapshot.visitors, baseline: snapshot.baseline, domain: snapshot.chartDomain,
-                               color: Trend(snapshot.change).color, showsTimeAxis: true, unit: snapshot.period.unit)
+                TrendSparkline(points: snapshot.series, baseline: snapshot.baseline, domain: snapshot.chartDomain,
+                               color: snapshot.trendColor, showsTimeAxis: true, unit: snapshot.period.unit,
+                               legend: snapshot.chartLegend)
+                    .widgetAccentable()
                 HStack(spacing: 6) {
                     WidgetFigure(title: "Views", value: Format.number(snapshot.stats.current.pageviews))
                     WidgetFigure(title: "Visits", value: Format.number(snapshot.stats.current.visits))
@@ -100,7 +122,7 @@ struct MediumWebsiteWidgetView: View {
     }
 }
 
-/// Large: header, big chart, six key figures and the top pages.
+/// Large: header, big chart, six key figures and the configured breakdown.
 struct LargeWebsiteWidgetView: View {
     let snapshot: WebsiteSnapshot
     var widgetKey: String?
@@ -115,15 +137,19 @@ struct LargeWebsiteWidgetView: View {
             }
 
             HStack(alignment: .lastTextBaseline, spacing: 8) {
-                HeadlineNumber(value: current.visitors, size: 34)
-                ChangePill(change: snapshot.change, minWidth: 0)
+                HeadlineNumber(text: snapshot.headline, value: snapshot.value, size: 34)
+                if snapshot.comparing {
+                    ChangePill(change: snapshot.change, higherIsBetter: snapshot.metric.higherIsBetter, minWidth: 0)
+                }
                 Spacer(minLength: 0)
-                PeriodLabel(period: snapshot.period, widgetKey: widgetKey)
+                PeriodLabel(period: snapshot.period, metric: snapshot.metric, widgetKey: widgetKey)
             }
             .padding(.top, 8)
 
-            TrendSparkline(points: snapshot.visitors, baseline: snapshot.baseline, domain: snapshot.chartDomain,
-                           color: Trend(snapshot.change).color, showsTimeAxis: true, unit: snapshot.period.unit)
+            TrendSparkline(points: snapshot.series, baseline: snapshot.baseline, domain: snapshot.chartDomain,
+                           color: snapshot.trendColor, showsTimeAxis: true, unit: snapshot.period.unit,
+                           legend: snapshot.chartLegend)
+                .widgetAccentable()
                 .frame(maxHeight: .infinity)
                 .padding(.vertical, 10)
 
@@ -141,22 +167,9 @@ struct LargeWebsiteWidgetView: View {
                 }
             }
 
-            if !snapshot.topPages.isEmpty {
+            if let type = snapshot.breakdownType, !snapshot.breakdown.isEmpty {
                 Divider().padding(.vertical, 8)
-                VStack(alignment: .leading, spacing: 4) {
-                    ForEach(snapshot.topPages.prefix(3)) { page in
-                        HStack {
-                            Text(page.value ?? "/")
-                                .lineLimit(1)
-                                .truncationMode(.middle)
-                            Spacer(minLength: 8)
-                            Text(Format.number(page.count))
-                                .monospacedDigit()
-                                .foregroundStyle(.secondary)
-                        }
-                        .font(.system(size: 12, weight: .medium))
-                    }
-                }
+                BreakdownList(type: type, items: snapshot.breakdown)
             }
         }
     }
@@ -164,37 +177,56 @@ struct LargeWebsiteWidgetView: View {
 
 // MARK: - Several websites
 
-/// One line of the watchlist: name, line of the period, visitors and change.
+/// One line of the watchlist: name, curve, the chosen figure and its change.
 struct WatchlistRow: View {
     let snapshot: WebsiteSnapshot
     var compact = false
+    var showsSparkline = true
 
     var body: some View {
         HStack(spacing: 10) {
             // Three rows fit a medium widget only without the domains.
             SiteTitle(snapshot: snapshot, nameFont: .system(size: compact ? 13 : 14, weight: .bold), showsDomain: !compact)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            TrendSparkline(points: snapshot.visitors, baseline: snapshot.baseline, domain: snapshot.chartDomain,
-                           color: Trend(snapshot.change).color, lineWidth: 1.5, showsFill: false)
-                .frame(width: 52)
+            if showsSparkline {
+                TrendSparkline(points: snapshot.series, baseline: snapshot.baseline, domain: snapshot.chartDomain,
+                               color: snapshot.trendColor, lineWidth: 1.5, showsFill: false)
+                    .widgetAccentable()
+                    .frame(width: 52)
+            }
             VStack(alignment: .trailing, spacing: 2) {
-                Text(Format.number(snapshot.stats.current.visitors))
+                Text(snapshot.headline)
                     .font(.system(size: compact ? 13 : 14, weight: .semibold, design: .rounded))
                     .monospacedDigit()
                     .lineLimit(1)
-                ChangePill(change: snapshot.change, minWidth: 54, font: .system(size: 11, weight: .semibold, design: .rounded))
+                    .minimumScaleFactor(0.7)
+                    .widgetAccentable()
+                if snapshot.comparing {
+                    ChangePill(change: snapshot.change, higherIsBetter: snapshot.metric.higherIsBetter,
+                               minWidth: showsSparkline ? 54 : 0,
+                               font: .system(size: 11, weight: .semibold, design: .rounded))
+                }
             }
-            .frame(minWidth: 58, alignment: .trailing)
+            .frame(minWidth: showsSparkline ? 58 : 0, alignment: .trailing)
         }
         .accessibilityElement(children: .combine)
     }
 }
 
+/// Home Screen only: it lays itself out from the widget family, and the system
+/// families do not exist on watchOS.
+#if os(iOS)
 struct WatchlistWidgetView: View {
     let snapshots: [WebsiteSnapshot]
     let period: WidgetPeriod
+    var metric: WidgetMetric = .visitors
     let maxRows: Int
     var widgetKey: String?
+    var family: WidgetFamily = .systemMedium
+
+    /// Domains and curves only fit the large widget, and only up to 7 rows.
+    private var compact: Bool { family != .systemLarge || maxRows > 7 }
+    private var showsSparkline: Bool { family != .systemSmall }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -208,16 +240,23 @@ struct WatchlistWidgetView: View {
                 }
                 .font(.system(size: 13, weight: .bold))
                 .labelStyle(.titleAndIcon)
-                Spacer()
-                PeriodLabel(period: period, widgetKey: widgetKey)
+                .lineLimit(1)
+                if family != .systemSmall {
+                    Spacer()
+                    PeriodLabel(period: period, metric: metric, widgetKey: widgetKey)
+                }
             }
             .padding(.bottom, 4)
+            if family == .systemSmall {
+                PeriodLabel(period: period, metric: metric, widgetKey: widgetKey)
+                    .padding(.bottom, 4)
+            }
 
             let rows = Array(snapshots.prefix(maxRows))
             ForEach(Array(rows.enumerated()), id: \.element.id) { index, snapshot in
                 if index > 0 { Divider() }
                 Link(destination: snapshot.deepLink.url) {
-                    WatchlistRow(snapshot: snapshot, compact: maxRows <= 3)
+                    WatchlistRow(snapshot: snapshot, compact: compact, showsSparkline: showsSparkline)
                         .frame(maxHeight: .infinity)
                         .foregroundStyle(Color.primary)
                 }
@@ -228,6 +267,8 @@ struct WatchlistWidgetView: View {
         }
     }
 }
+
+#endif
 
 // MARK: - Lock Screen
 
@@ -251,7 +292,7 @@ struct RectangularWebsiteWidgetView: View {
             }
             HStack(alignment: .bottom, spacing: 6) {
                 VStack(alignment: .leading, spacing: 0) {
-                    Text(Format.number(snapshot.stats.current.visitors))
+                    Text(snapshot.headline)
                         .font(.system(size: 22, weight: .semibold, design: .rounded))
                         .monospacedDigit()
                         .lineLimit(1)
@@ -263,30 +304,37 @@ struct RectangularWebsiteWidgetView: View {
                             .lineLimit(1)
                     }
                 }
-                TrendSparkline(points: snapshot.visitors, baseline: snapshot.baseline, domain: snapshot.chartDomain,
+                TrendSparkline(points: snapshot.series, baseline: snapshot.baseline, domain: snapshot.chartDomain,
                                color: .primary, lineWidth: 1.5)
             }
         }
     }
 }
 
-/// Ring filled by today's visitors compared to the previous period.
+extension WebsiteSnapshot {
+    /// What a gauge fills against: the same figure over the previous period,
+    /// so a full ring means "already as good as last time".
+    var gaugeTarget: Double {
+        max(stats.previous.map { metric.value($0) } ?? value, value > 0 ? value : 1)
+    }
+}
+
+/// Ring filled by the current figure compared to the previous period.
 struct CircularWebsiteWidgetView: View {
     let snapshot: WebsiteSnapshot
 
     var body: some View {
-        let current = snapshot.stats.current.visitors
-        let target = max(snapshot.stats.previous?.visitors ?? current, 1)
-        Gauge(value: min(current, target), in: 0...target) {
+        let target = snapshot.gaugeTarget
+        Gauge(value: min(snapshot.value, target), in: 0...target) {
             LogoMark()
         } currentValueLabel: {
-            Text(Format.number(current))
+            Text(snapshot.headline)
                 .font(.system(.body, design: .rounded).weight(.semibold))
                 .minimumScaleFactor(0.5)
         }
         .gaugeStyle(.accessoryCircularCapacity)
         .widgetAccentable()
-        .accessibilityLabel(Text("^[\(Int(current)) visitor](inflect: true)"))
+        .accessibilityLabel(Text(snapshot.headline))
     }
 }
 
@@ -294,14 +342,37 @@ struct InlineWebsiteWidgetView: View {
     let snapshot: WebsiteSnapshot
 
     var body: some View {
-        let visitors = Format.number(snapshot.stats.current.visitors)
+        let figure = snapshot.headline
         if let active = snapshot.activeVisitors, active > 0 {
-            Label("\(visitors) visitors · \(active) online", systemImage: Trend(snapshot.change).systemImage)
+            Label("\(figure) \(Text(snapshot.metric.shortTitle)) · \(active) online", systemImage: Trend(snapshot.change).systemImage)
         } else {
-            Label("\(visitors) visitors · \(snapshot.name)", systemImage: Trend(snapshot.change).systemImage)
+            Label("\(figure) \(Text(snapshot.metric.shortTitle)) · \(snapshot.name)", systemImage: Trend(snapshot.change).systemImage)
         }
     }
 }
+
+#if os(watchOS)
+/// A corner of a watch face: the figure in the corner itself, and the gauge of
+/// the circular complication curved along the bezel. `.accessoryCorner` only
+/// exists where there is a round screen to curve against.
+struct CornerWebsiteWidgetView: View {
+    let snapshot: WebsiteSnapshot
+
+    var body: some View {
+        let target = snapshot.gaugeTarget
+        Text(snapshot.headline)
+            .font(.system(.title3, design: .rounded).weight(.semibold))
+            .minimumScaleFactor(0.5)
+            .widgetAccentable()
+            .widgetLabel {
+                Gauge(value: min(snapshot.value, target), in: 0...target) {
+                    Text(snapshot.name)
+                }
+            }
+            .accessibilityLabel(Text("\(snapshot.headline) \(Text(snapshot.metric.shortTitle)) · \(snapshot.name)"))
+    }
+}
+#endif
 
 // MARK: - Shortcuts
 
@@ -313,15 +384,15 @@ struct VisitorsSnippetView: View {
         HStack(spacing: 16) {
             VStack(alignment: .leading, spacing: 4) {
                 SiteTitle(snapshot: snapshot)
-                HeadlineNumber(value: snapshot.stats.current.visitors, size: 30)
+                HeadlineNumber(text: snapshot.headline, value: snapshot.value, size: 30)
                 HStack(spacing: 8) {
-                    ChangePill(change: snapshot.change, minWidth: 0)
-                    PeriodLabel(period: snapshot.period)
+                    ChangePill(change: snapshot.change, higherIsBetter: snapshot.metric.higherIsBetter, minWidth: 0)
+                    PeriodLabel(period: snapshot.period, metric: snapshot.metric)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            TrendSparkline(points: snapshot.visitors, baseline: snapshot.baseline, domain: snapshot.chartDomain,
-                           color: Trend(snapshot.change).color)
+            TrendSparkline(points: snapshot.series, baseline: snapshot.baseline, domain: snapshot.chartDomain,
+                           color: snapshot.trendColor)
                 .frame(width: 130, height: 70)
         }
         .padding()

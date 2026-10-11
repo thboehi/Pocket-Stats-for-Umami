@@ -76,7 +76,7 @@ struct AccountsDrawer<Content: View>: View {
         .onChange(of: model.currentAccount?.id) { setOpen(false) }
         #if DEBUG
         .task {
-            guard DebugLaunch.screen == "accounts" else { return }
+            guard ["accounts", "signout"].contains(DebugLaunch.screen) else { return }
             try? await Task.sleep(for: .seconds(1.5))
             model.isShowingAccounts = true
         }
@@ -184,7 +184,13 @@ private struct AccountsPanel: View {
             }
         }
         #if DEBUG
-        .task { if DebugLaunch.screen == "settings" { isShowingSettings = true } }
+        .task {
+            if DebugLaunch.screen == "settings" { isShowingSettings = true }
+            if DebugLaunch.screen == "signout" {
+                try? await Task.sleep(for: .seconds(2))
+                accountPendingRemoval = model.currentAccount
+            }
+        }
         #endif
         .sheet(isPresented: $isShowingAddAccount) {
             AddAccountView()
@@ -192,13 +198,17 @@ private struct AccountsPanel: View {
         .sheet(isPresented: $isShowingSettings) {
             SettingsView()
         }
-        .confirmationDialog(
+        // An alert rather than a confirmation dialog: a dialog anchors itself to
+        // whatever presented it, and inside the drawer — a panel with the whole
+        // app slid aside — that anchor lands off the panel. An alert is centred
+        // on the window whatever its presenter is doing.
+        .alert(
             "Sign out of \(accountPendingRemoval?.title ?? "")?",
             isPresented: Binding(get: { accountPendingRemoval != nil }, set: { if !$0 { accountPendingRemoval = nil } }),
-            titleVisibility: .visible,
             presenting: accountPendingRemoval
         ) { account in
             Button("Sign Out", role: .destructive) { model.remove(account) }
+            Button("Cancel", role: .cancel) {}
         } message: { _ in
             Text("Your credentials will be removed from this device. Nothing is deleted on the server.")
         }

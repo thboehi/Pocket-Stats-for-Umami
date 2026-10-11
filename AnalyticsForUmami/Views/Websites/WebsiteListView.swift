@@ -241,7 +241,7 @@ struct WebsiteRow: View {
             if showsSparkline {
                 let series = websites.rowSeries[website.id]
                 TrendSparkline(points: series ?? [], domain: websites.chartDomain,
-                               color: Trend(change).color, lineWidth: 1.5, showsFill: false)
+                               color: Trend(change).color(), lineWidth: 1.5, showsFill: false)
                     .frame(width: 52, height: 28)
                     // Charts would animate the line out of nothing: fade it in instead.
                     .transaction { $0.animation = nil }

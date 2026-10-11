@@ -18,6 +18,8 @@ struct AnalyticsForUmamiApp: App {
                     model.open(link)
                 }
                 .task { QuickActions.update(accounts: model.accounts) }
+                // The watch has its own stores: it only knows what we send it.
+                .task { WatchLink.shared.activate() }
                 #if DEBUG
                 .task { await DebugLaunch.apply(to: model) }
                 #endif

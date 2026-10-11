@@ -86,6 +86,7 @@ final class AppModel {
             share,
         ]
         AccountStore.save(accounts)
+        WatchLink.shared.send()
     }
     #endif
 
@@ -122,6 +123,7 @@ final class AppModel {
         currentAccount = account
         AccountStore.selectedAccountID = account.id
         WidgetCenter.shared.reloadAllTimelines()
+        WatchLink.shared.send()
     }
 
     func remove(_ account: Account) {
@@ -135,6 +137,7 @@ final class AppModel {
         }
         WidgetCenter.shared.reloadAllTimelines()
         QuickActions.update(accounts: accounts)
+        WatchLink.shared.send()
     }
 
     private func upsertAndSelect(_ account: Account) {

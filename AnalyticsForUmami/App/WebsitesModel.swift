@@ -104,6 +104,7 @@ final class WebsitesModel {
             favoriteIDs.append(website.id)
         }
         FavoritesStore.set(favoriteIDs, for: account.id)
+        WatchLink.shared.send()
         didChange()
     }
 
